@@ -100,11 +100,11 @@ Runs only on AWS Management Console pages to detect the active supported Region 
 - Screenshot 2: `store-assets/screenshots/02-tokyo-region.png`
 - Screenshot 3: `store-assets/screenshots/03-global-space-and-toggle.png`
 
-All screenshots are `1280×800`, which matches the recommended Chrome Web Store screenshot size. The manifest's 128px store icon uses the branded night-sky artwork. The existing simplified moon artwork remains at 16px and 48px because the complete official logo is not legible at toolbar size.
+All screenshots are `1280×800`, which matches the recommended Chrome Web Store screenshot size. The manifest's 128px store icon uses the high-resolution golden crescent artwork with an AWS-only mark. The 48px variant preserves the composition, while the 16px toolbar variant uses the golden crescent alone for legibility.
 
 These screenshots are privacy-safe staged previews rendered from a local Console mock. After signed-in AWS Console QA, compare them against the live interface and replace any materially different view before public submission.
 
-The icon uses the unmodified official `Powered by AWS` dark-background asset supplied by the [AWS Co-Marketing Tools](https://aws.amazon.com/co-marketing/) page. Review the current [AWS Trademark Guidelines](https://aws.amazon.com/trademark-guidelines/) before public release. AWS Dream must not imply AWS sponsorship or endorsement.
+The AWS-only icon is a local design concept. The current [AWS Trademark Guidelines](https://aws.amazon.com/trademark-guidelines/) do not provide the same general third-party license for the AWS Smile Logo that they provide for `Powered by AWS`. Obtain written permission or another applicable AWS license before submitting this icon publicly. AWS Dream must not imply AWS sponsorship or endorsement.
 
 ## Manual QA checklist
 
