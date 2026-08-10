@@ -4,13 +4,11 @@
  * Best-effort candidate CSS selectors for locating the AWS Console header
  * mount point and the visible Region-selector control.
  *
- * IMPORTANT: Exact AWS Console header DOM selectors are unverified against a
- * live Console (deferred per PRD.md §16 and flagged as an Open Question in
- * openspec/changes/aws-dream-mvp/design.md). These lists are reasonable,
- * documented guesses, ordered from most specific/stable to most generic.
- * `findFirst` returns the first match and the rest of the system fails
- * closed (does nothing) if nothing matches, so a wrong guess here never
- * breaks the native AWS Console UI -- it just means no theming applies.
+ * The header mount selectors are intentionally limited to the current AWS
+ * global navigation element. A generic `header` selector can match unrelated
+ * hidden panels while the Console shell is still booting, and the outer AWS
+ * header sits behind an opaque navigation surface. `findFirst` fails closed
+ * when no verified navigation mount is present.
  */
 (function (root) {
   'use strict';
@@ -18,14 +16,11 @@
   // Ordered best-effort candidates for the AWS Console header container that
   // the decorative layer is mounted into. Most specific/stable hooks first.
   var HEADER_MOUNT_SELECTORS = [
-    '[data-testid="awsc-nav-header"]',
-    '#awsc-nav-header',
-    'header#awsc-nav-header',
-    '.awsc-nav-header',
-    'header[data-testid="awsc-nav-header"]',
-    'nav[data-testid="awsc-nav-header"]',
-    'header[role="banner"]',
-    'header'
+    '#awsc-nav-header nav[aria-label="Global"]',
+    '[data-testid="awsc-nav-header"] nav[aria-label="Global"]',
+    '.awsc-nav-header nav[aria-label="Global"]',
+    'nav[aria-label="Global"]',
+    '[role="navigation"][aria-label="Global"]'
   ];
 
   // Ordered best-effort candidates for the visible Region-selector control

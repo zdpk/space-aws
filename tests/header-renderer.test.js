@@ -259,6 +259,8 @@ describe('header-renderer.js - non-interactive decoration', () => {
     assert.ok(layer, 'expected #aws-dream-layer after a global-state render');
     assert.equal(layer.getAttribute('aria-hidden'), 'true');
     assert.equal(dom.window.getComputedStyle(layer).pointerEvents, 'none');
+    assert.equal(layer.parentElement.matches('nav[aria-label="Global"]'), true);
+    assert.equal(layer.style.zIndex, '-1');
   });
 });
 

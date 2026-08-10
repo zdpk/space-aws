@@ -118,6 +118,14 @@
     }
   }
 
+  function restoreTrackedMountPosition(mount) {
+    if (!mount || mount.getAttribute(POSITIONED_ATTR) !== 'true') {
+      return;
+    }
+    mount.style.removeProperty('position');
+    mount.removeAttribute(POSITIONED_ATTR);
+  }
+
   function createLayer(rootDocument) {
     var layer = rootDocument.createElement('div');
     layer.id = LAYER_ID;
@@ -129,13 +137,20 @@
     layer.style.bottom = '0';
     layer.style.left = '0';
     layer.style.pointerEvents = 'none';
-    layer.style.zIndex = '0';
+    // The live AWS global nav establishes its own stacking context. A
+    // negative layer sits above that nav's background but below its native
+    // controls, so the artwork cannot obscure labels or buttons.
+    layer.style.zIndex = '-1';
     layer.style.backgroundRepeat = 'no-repeat';
     layer.style.backgroundSize = 'cover';
     return layer;
   }
 
   function ensureLayerIsFirstChild(mount, layer) {
+    var previousMount = layer.parentElement;
+    if (previousMount && previousMount !== mount) {
+      restoreTrackedMountPosition(previousMount);
+    }
     if (mount.firstChild !== layer) {
       mount.insertBefore(layer, mount.firstChild);
     }
@@ -259,9 +274,7 @@
 
     var positionedMounts = rootDocument.querySelectorAll('[' + POSITIONED_ATTR + '="true"]');
     for (var i = 0; i < positionedMounts.length; i += 1) {
-      var mount = positionedMounts[i];
-      mount.style.removeProperty('position');
-      mount.removeAttribute(POSITIONED_ATTR);
+      restoreTrackedMountPosition(positionedMounts[i]);
     }
 
     var styleEl = rootDocument.getElementById(STYLE_ID);

@@ -18,6 +18,7 @@
   <style>
     /* Minimal layout so getComputedStyle reports predictable values. */
     #awsc-nav-header { position: static; height: 40px; }
+    nav[aria-label="Global"] { position: static; height: 40px; }
   </style>
 </head>
 <body>
@@ -29,16 +30,16 @@
       role="banner"
       aria-label="AWS Management Console navigation"
     >
-      <div class="nav-header-inner">
-        <a
-          id="nav-logo"
-          class="nav-logo"
-          data-testid="awsc-nav-logo"
-          href="https://console.aws.amazon.com/"
-          aria-label="AWS Console Home"
-        >AWS</a>
+      <nav aria-label="Global" class="nav-elements">
+        <div class="nav-header-inner">
+          <a
+            id="nav-logo"
+            class="nav-logo"
+            data-testid="awsc-nav-logo"
+            href="https://console.aws.amazon.com/"
+            aria-label="AWS Console Home"
+          >AWS</a>
 
-        <nav aria-label="Global" class="nav-elements">
           <button
             id="nav-servicesMenu"
             class="nav-services-menu"
@@ -55,37 +56,37 @@
           >
             <input type="text" aria-label="Search" placeholder="Search" />
           </div>
-        </nav>
 
-        <div class="nav-right-elements">
-          <button
-            id="nav-regionMenu"
-            class="region-selector"
-            data-testid="awsc-nav-region-menu"
-            type="button"
-            aria-haspopup="true"
-            aria-label="Region selector"
-          >
-            <span class="region-menu-text">Asia Pacific (Seoul)</span>
-          </button>
+          <div class="nav-right-elements">
+            <button
+              id="nav-regionMenu"
+              class="region-selector"
+              data-testid="awsc-nav-region-menu"
+              type="button"
+              aria-haspopup="true"
+              aria-label="Region selector"
+            >
+              <span class="region-menu-text">Asia Pacific (Seoul)</span>
+            </button>
 
-          <button
-            id="nav-supportMenu"
-            class="nav-support-menu"
-            data-testid="awsc-nav-support-menu"
-            type="button"
-            aria-haspopup="true"
-          >Support</button>
+            <button
+              id="nav-supportMenu"
+              class="nav-support-menu"
+              data-testid="awsc-nav-support-menu"
+              type="button"
+              aria-haspopup="true"
+            >Support</button>
 
-          <button
-            id="nav-usernameMenu"
-            class="nav-username-menu"
-            data-testid="awsc-nav-username-menu"
-            type="button"
-            aria-haspopup="true"
-          >my-account</button>
+            <button
+              id="nav-usernameMenu"
+              class="nav-username-menu"
+              data-testid="awsc-nav-username-menu"
+              type="button"
+              aria-haspopup="true"
+            >my-account</button>
+          </div>
         </div>
-      </div>
+      </nav>
     </header>
 
     <main id="main-content">
