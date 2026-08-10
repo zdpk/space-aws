@@ -28,7 +28,16 @@
       domTargets: require('./dom-targets.js'),
       storage: require('./storage.js')
     }
-    : root.AWSDream;
+    : {
+      // Classic MV3 content scripts share one flat window.AWSDream API.
+      // Mirror the grouped Node dependency shape without expecting nested
+      // browser objects such as AWSDream.regionDetector.
+      regionDetector: root.AWSDream,
+      headerRenderer: root.AWSDream,
+      navigationObserver: root.AWSDream,
+      domTargets: root.AWSDream,
+      storage: root.AWSDream
+    };
 
   function noop() {}
 
