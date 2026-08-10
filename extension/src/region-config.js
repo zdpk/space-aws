@@ -8,20 +8,14 @@
  * points at a deterministic local asset path following the pattern
  * `assets/regions/<region-code>.webp`.
  *
- * Only `ap-northeast-2` (Seoul) has a real bundled asset in this change
- * (converted from the approved Seoul reference via scripts/convert-seoul-
- * asset.sh). Every other path intentionally has no file behind it yet -- the
- * renderer's fail-closed asset handling (see header-renderer.js) keeps the
- * native AWS header when an asset is missing, so listing the path here does
- * not imply the file exists. Do not add placeholder/fabricated image files
- * for those paths.
+ * Every configured path has a distinct approved 1536 x 256 WebP asset.
+ * Source prompts and geographic research remain under prompts/ and docs/;
+ * runtime copies are synchronized with scripts/sync-region-assets.sh.
  *
- * `backgroundColor` / `objectPosition` are placeholder visual tokens derived
+ * `backgroundColor` / `objectPosition` are visual fallback tokens derived
  * from the palette language in PRD.md §5 (e.g. "navy, indigo, coral
- * twilight" for Seoul). They are not final Claude Design tokens -- final
- * per-Region overlay/focal-point values remain an Open Question in
- * openspec/changes/aws-dream-mvp/design.md until the remaining assets and
- * their crops are approved.
+ * twilight" for Seoul). Final responsive safe zones still require live AWS
+ * Console validation before store release.
  */
 (function (root) {
   'use strict';

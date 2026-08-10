@@ -248,7 +248,10 @@ describe('header-renderer.js - non-interactive decoration', () => {
 
   it('sets aria-hidden="true" and pointer-events: none on the decorative layer', async () => {
     const ControlledImage = installControlledImage(dom.window);
-    headerRenderer.renderState({ status: 'global' }, { rootDocument: doc });
+    headerRenderer.renderState(
+      { status: 'global', regionCode: 'aws-global' },
+      { rootDocument: doc }
+    );
     ControlledImage.resolveAll();
     await flush();
 
@@ -428,6 +431,22 @@ describe('header-renderer.js - preload before swap', () => {
       snapshotBefore,
       'expected the layer to update once the new asset finished preloading'
     );
+  });
+
+  it('ignores a stale preload that finishes after a newer Region request', async () => {
+    const ControlledImage = installControlledImage(dom.window);
+
+    headerRenderer.renderState({ status: 'region', regionCode: 'us-west-2' }, { rootDocument: doc });
+    headerRenderer.renderState({ status: 'region', regionCode: 'us-east-1' }, { rootDocument: doc });
+
+    const [staleProbe, currentProbe] = ControlledImage.pending.splice(0, 2);
+    currentProbe.onload(new dom.window.Event('load'));
+    staleProbe.onload(new dom.window.Event('load'));
+    await flush();
+
+    const layer = doc.getElementById('aws-dream-layer');
+    assert.ok(layer);
+    assert.equal(layer.dataset.assetKey, 'us-east-1');
   });
 });
 

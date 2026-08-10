@@ -16,6 +16,7 @@
 const assert = require('node:assert/strict');
 const { describe, it } = require('node:test');
 const fs = require('node:fs');
+const crypto = require('node:crypto');
 const path = require('node:path');
 
 const REGION_CONFIG_PATH = path.join(
@@ -41,7 +42,6 @@ const SUPPORTED_REGION_CODES = [
 ];
 
 const GLOBAL_CODE = 'aws-global';
-const ASSET_WITH_REAL_FILE = 'ap-northeast-2';
 
 function loadRegionConfig() {
   return require(REGION_CONFIG_PATH);
@@ -176,59 +176,25 @@ describe('region-config.js - GLOBAL_SERVICE_MARKERS shape', () => {
   });
 });
 
-describe('region-assets spec - no fabricated regional assets on disk', () => {
-  // specs/region-assets/spec.md "No fabricated regional assets":
-  // only ap-northeast-2 has a real, approved production asset at this stage;
-  // every other Region path (and aws-global) must NOT exist yet.
-  const codesWithoutRealAssetYet = [...SUPPORTED_REGION_CODES, GLOBAL_CODE].filter(
-    (code) => code !== ASSET_WITH_REAL_FILE
-  );
+describe('region-assets spec - complete production asset set', () => {
+  const allCodes = [...SUPPORTED_REGION_CODES, GLOBAL_CODE];
 
-  for (const code of codesWithoutRealAssetYet) {
-    it(`does NOT have a bundled asset file yet for "${code}" (intentional, not a bug)`, () => {
+  for (const code of allCodes) {
+    it(`has a non-empty WebP asset for "${code}"`, () => {
       const assetPath = path.join(EXTENSION_ROOT, 'assets', 'regions', `${code}.webp`);
-      assert.ok(
-        !fs.existsSync(assetPath),
-        `expected extension/assets/regions/${code}.webp to NOT exist yet ` +
-          '(only ap-northeast-2 has a real image at this stage of the project; ' +
-          'a file here would indicate a fabricated/placeholder asset, which the ' +
-          'region-assets spec explicitly forbids)'
-      );
+      assert.ok(fs.existsSync(assetPath), `missing extension/assets/regions/${code}.webp`);
+      const asset = fs.readFileSync(assetPath);
+      assert.ok(asset.length > 1000, `asset is unexpectedly small: ${code}.webp`);
+      assert.equal(asset.subarray(0, 4).toString('ascii'), 'RIFF');
+      assert.equal(asset.subarray(8, 12).toString('ascii'), 'WEBP');
     });
   }
 
-  it(`DOES have a bundled asset file for "${ASSET_WITH_REAL_FILE}" (the approved Seoul asset)`, () => {
-    const assetPath = path.join(
-      EXTENSION_ROOT,
-      'assets',
-      'regions',
-      `${ASSET_WITH_REAL_FILE}.webp`
-    );
-    assert.ok(
-      fs.existsSync(assetPath),
-      `expected extension/assets/regions/${ASSET_WITH_REAL_FILE}.webp to exist ` +
-        '(converted from output/imagegen/seoul-atmospheric-panorama-header.png ' +
-        'by scripts/convert-seoul-asset.sh, owned by core)'
-    );
-  });
-
-  it('no other Region asset file is byte-identical to the Seoul asset (no copy/relabel)', () => {
-    const seoulPath = path.join(EXTENSION_ROOT, 'assets', 'regions', `${ASSET_WITH_REAL_FILE}.webp`);
-    if (!fs.existsSync(seoulPath)) {
-      // Covered by the dedicated "DOES have a bundled asset file" test above.
-      return;
-    }
-    const seoulBuffer = fs.readFileSync(seoulPath);
-    for (const code of codesWithoutRealAssetYet) {
+  it('all 11 production assets are byte-distinct', () => {
+    const hashes = allCodes.map((code) => {
       const assetPath = path.join(EXTENSION_ROOT, 'assets', 'regions', `${code}.webp`);
-      if (fs.existsSync(assetPath)) {
-        const otherBuffer = fs.readFileSync(assetPath);
-        assert.notEqual(
-          Buffer.compare(seoulBuffer, otherBuffer),
-          0,
-          `extension/assets/regions/${code}.webp must not be a byte-for-byte copy of the Seoul asset`
-        );
-      }
-    }
+      return crypto.createHash('sha256').update(fs.readFileSync(assetPath)).digest('hex');
+    });
+    assert.equal(new Set(hashes).size, allCodes.length);
   });
 });

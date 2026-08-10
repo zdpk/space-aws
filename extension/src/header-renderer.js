@@ -32,6 +32,7 @@
   var STYLE_ID = 'aws-dream-style';
   var POSITIONED_ATTR = 'data-aws-dream-positioned';
   var TRANSITION_CSS = 'opacity 220ms ease-in-out';
+  var renderRequestId = 0;
 
   // Documents intent; the essential structural/behavioral properties are
   // also always set inline on the layer element itself (see createLayer),
@@ -173,7 +174,7 @@
       return;
     }
 
-    var key = state && state.regionCode;
+    var key = state && (state.regionCode || (state.status === 'global' ? 'aws-global' : null));
     var isRenderableStatus = !!state && (state.status === 'region' || state.status === 'global');
     var config = isRenderableStatus && key && REGION_MAP ? REGION_MAP[key] : null;
 
@@ -206,8 +207,12 @@
     var view = getView(rootDocument);
     var reducedMotion = prefersReducedMotion(rootDocument);
     var probe = createImageProbe(rootDocument);
+    var requestId = ++renderRequestId;
 
     probe.onload = function () {
+      if (requestId !== renderRequestId) {
+        return;
+      }
       ensureStyleTag(rootDocument);
       ensureMountPositioned(mount, view);
 
@@ -222,6 +227,9 @@
     };
 
     probe.onerror = function () {
+      if (requestId !== renderRequestId) {
+        return;
+      }
       // Missing or failed-to-load asset: fail closed, never show a broken
       // image or another Region's asset.
       restoreNativeHeader({ rootDocument: rootDocument });
@@ -238,6 +246,7 @@
    * tag. Idempotent and safe to call even if nothing was ever rendered.
    */
   function restoreNativeHeader(opts) {
+    renderRequestId += 1;
     var rootDocument = getRootDocument(opts);
     if (!rootDocument) {
       return;
