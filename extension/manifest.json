@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "AWS Dream",
+  "version": "0.1.0",
+  "description": "Region-aware atmospheric header theming for the AWS Management Console.",
+  "permissions": ["storage"],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_title": "AWS Dream",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.console.aws.amazon.com/*"],
+      "js": [
+        "src/region-config.js",
+        "src/dom-targets.js",
+        "src/region-detector.js",
+        "src/navigation-observer.js",
+        "src/header-renderer.js",
+        "src/storage.js",
+        "src/content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["assets/regions/*.webp"],
+      "matches": ["https://*.console.aws.amazon.com/*"]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "aws-dream",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AWS Dream Chrome Extension (Manifest V3) - Region-aware AWS Console header theming",
+  "type": "commonjs",
+  "scripts": {
+    "test": "node --test tests/"
+  },
+  "devDependencies": {
+    "jsdom": "^25.0.0"
+  }
+}
