@@ -38,7 +38,8 @@ const NATIVE_TESTIDS = [
   'awsc-nav-search',
   'awsc-nav-region-menu',
   'awsc-nav-support-menu',
-  'awsc-nav-username-menu'
+  'awsc-nav-username-menu',
+  'awsc-nav-shortcuts'
 ];
 
 function loadFixtureDom() {
@@ -259,8 +260,9 @@ describe('header-renderer.js - non-interactive decoration', () => {
     assert.ok(layer, 'expected #aws-dream-layer after a global-state render');
     assert.equal(layer.getAttribute('aria-hidden'), 'true');
     assert.equal(dom.window.getComputedStyle(layer).pointerEvents, 'none');
-    assert.equal(layer.parentElement.matches('nav[aria-label="Global"]'), true);
+    assert.equal(layer.parentElement.id, 'awsc-top-level-nav');
     assert.equal(layer.style.zIndex, '-1');
+    assert.equal(doc.querySelector('#awsc-nav-shortcuts #aws-dream-layer'), null);
   });
 });
 

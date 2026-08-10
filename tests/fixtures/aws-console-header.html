@@ -17,8 +17,10 @@
   -->
   <style>
     /* Minimal layout so getComputedStyle reports predictable values. */
-    #awsc-nav-header { position: static; height: 40px; }
-    nav[aria-label="Global"] { position: static; height: 40px; }
+    #awsc-nav-header { position: static; height: 73px; }
+    nav[aria-label="Global"] { position: static; height: 73px; }
+    #awsc-top-level-nav { position: static; height: 40px; }
+    #awsc-nav-shortcuts { height: 33px; }
   </style>
 </head>
 <body>
@@ -31,7 +33,7 @@
       aria-label="AWS Management Console navigation"
     >
       <nav aria-label="Global" class="nav-elements">
-        <div class="nav-header-inner">
+        <div id="awsc-top-level-nav" class="nav-header-inner">
           <a
             id="nav-logo"
             class="nav-logo"
@@ -85,6 +87,11 @@
               aria-haspopup="true"
             >my-account</button>
           </div>
+        </div>
+        <div id="awsc-nav-shortcuts" data-testid="awsc-nav-shortcuts">
+          <a href="#ec2">EC2</a>
+          <a href="#s3">S3</a>
+          <a href="#vpc">VPC</a>
         </div>
       </nav>
     </header>

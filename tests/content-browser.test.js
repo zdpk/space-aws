@@ -17,7 +17,10 @@ describe('content scripts - classic browser namespace integration', () => {
       '<!doctype html><html><head></head><body>' +
         '<header data-testid="awsc-nav-header">' +
           '<nav aria-label="Global">' +
-            '<button data-testid="awsc-nav-region-menu">Asia Pacific (Seoul)</button>' +
+            '<div id="awsc-top-level-nav">' +
+              '<button data-testid="awsc-nav-region-menu">Asia Pacific (Seoul)</button>' +
+            '</div>' +
+            '<div id="awsc-nav-shortcuts">EC2 S3 VPC</div>' +
           '</nav>' +
         '</header>' +
       '</body></html>',
@@ -128,16 +131,23 @@ describe('content scripts - classic browser namespace integration', () => {
       realHeader.setAttribute('data-testid', 'awsc-nav-header');
       const globalNav = dom.window.document.createElement('nav');
       globalNav.setAttribute('aria-label', 'Global');
+      const topLevelNav = dom.window.document.createElement('div');
+      topLevelNav.id = 'awsc-top-level-nav';
+      const shortcutsNav = dom.window.document.createElement('div');
+      shortcutsNav.id = 'awsc-nav-shortcuts';
+      globalNav.appendChild(topLevelNav);
+      globalNav.appendChild(shortcutsNav);
       realHeader.appendChild(globalNav);
       dom.window.document.body.prepend(realHeader);
 
       await new Promise((resolve) => dom.window.setTimeout(resolve, 0));
       await new Promise((resolve) => dom.window.setTimeout(resolve, 0));
 
-      const layer = globalNav.querySelector('#aws-dream-layer');
-      assert.ok(layer, 'expected the decorative layer inside the real AWS global navigation');
+      const layer = topLevelNav.querySelector('#aws-dream-layer');
+      assert.ok(layer, 'expected the decorative layer inside the AWS top-level navigation row');
       assert.equal(layer.dataset.assetKey, 'ap-northeast-2');
       assert.equal(layer.style.zIndex, '-1');
+      assert.equal(shortcutsNav.querySelector('#aws-dream-layer'), null);
       assert.equal(hiddenHeader.querySelector('#aws-dream-layer'), null);
     } finally {
       dom.window.close();
