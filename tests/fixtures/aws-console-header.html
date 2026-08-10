@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>AWS Dream QA Fixture - AWS Console header (mounted)</title>
+  <!--
+    This is a plausible, hand-built approximation of the AWS Management
+    Console top navigation header, for jsdom-based unit testing only.
+    It is NOT scraped from the live Console (see PRD.md §16 / design.md
+    "Open Questions" - exact selectors are unverified against a live
+    Console). It exists so tests can:
+      - locate a header "mount point" candidate for the decorative layer
+      - locate a Region-selector element with visible Region text
+      - assert that native controls (buttons/links with distinct
+        data-testid-like attributes) are never moved, removed, or have
+        their own attributes/styles changed by the renderer.
+  -->
+  <style>
+    /* Minimal layout so getComputedStyle reports predictable values. */
+    #awsc-nav-header { position: static; height: 40px; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <header
+      id="awsc-nav-header"
+      class="awsc-nav-header"
+      data-testid="awsc-nav-header"
+      role="banner"
+      aria-label="AWS Management Console navigation"
+    >
+      <div class="nav-header-inner">
+        <a
+          id="nav-logo"
+          class="nav-logo"
+          data-testid="awsc-nav-logo"
+          href="https://console.aws.amazon.com/"
+          aria-label="AWS Console Home"
+        >AWS</a>
+
+        <nav aria-label="Global" class="nav-elements">
+          <button
+            id="nav-servicesMenu"
+            class="nav-services-menu"
+            data-testid="awsc-nav-services-menu"
+            type="button"
+            aria-haspopup="true"
+          >Services</button>
+
+          <div
+            id="nav-search"
+            class="nav-search"
+            data-testid="awsc-nav-search"
+            role="search"
+          >
+            <input type="text" aria-label="Search" placeholder="Search" />
+          </div>
+        </nav>
+
+        <div class="nav-right-elements">
+          <button
+            id="nav-regionMenu"
+            class="region-selector"
+            data-testid="awsc-nav-region-menu"
+            type="button"
+            aria-haspopup="true"
+            aria-label="Region selector"
+          >
+            <span class="region-menu-text">Asia Pacific (Seoul)</span>
+          </button>
+
+          <button
+            id="nav-supportMenu"
+            class="nav-support-menu"
+            data-testid="awsc-nav-support-menu"
+            type="button"
+            aria-haspopup="true"
+          >Support</button>
+
+          <button
+            id="nav-usernameMenu"
+            class="nav-username-menu"
+            data-testid="awsc-nav-username-menu"
+            type="button"
+            aria-haspopup="true"
+          >my-account</button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <p>Fixture body content unrelated to the header, for realism only.</p>
+    </main>
+  </div>
+</body>
+</html>
