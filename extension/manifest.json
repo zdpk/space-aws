@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "AWS Dream",
+  "name": "SPACE AWS",
   "version": "0.1.0",
   "description": "Region-aware atmospheric header theming for the AWS Management Console.",
   "permissions": ["storage"],
@@ -11,7 +11,7 @@
   },
   "action": {
     "default_popup": "src/popup/popup.html",
-    "default_title": "AWS Dream",
+    "default_title": "SPACE AWS",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",

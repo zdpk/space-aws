@@ -1,4 +1,4 @@
-// AWS Dream - popup.js
+// SPACE AWS - popup.js
 //
 // Wires the single accessible switch in popup.html to the shared
 // storage.js contract (window.AWSDream.getEnabled/setEnabled/
@@ -19,8 +19,8 @@
     function setStatusText(enabled) {
       if (statusText) {
         statusText.textContent = enabled
-          ? 'AWS Dream theming is on.'
-          : 'AWS Dream theming is off.';
+          ? 'SPACE AWS theming is on.'
+          : 'SPACE AWS theming is off.';
       }
     }
 
@@ -35,7 +35,7 @@
       .then(applyState)
       .catch(function (error) {
         applyState(storageApi.DEFAULT_ENABLED);
-        console.error('AWS Dream: failed to read enabled state', error);
+        console.error('SPACE AWS: failed to read enabled state', error);
       });
 
     // User-driven toggle.
@@ -43,7 +43,7 @@
       var nextEnabled = checkbox.checked;
       setStatusText(nextEnabled);
       storageApi.setEnabled(nextEnabled).catch(function (error) {
-        console.error('AWS Dream: failed to persist enabled state', error);
+        console.error('SPACE AWS: failed to persist enabled state', error);
       });
     });
 

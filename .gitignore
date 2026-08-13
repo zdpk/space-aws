@@ -48,3 +48,9 @@ tmp/
 # Saved Chrome Web Store dashboard page
 extension/icons/icon.html
 extension/icons/icon_files/
+
+# Obsolete AWS Dream store artwork kept only for local reference
+store-assets/icons/aws-dream-store-icon-*.png
+store-assets/source/icon-*-background.png
+store-assets/source/icon-composite.html
+store-assets/source/powered-by-aws-white.png
