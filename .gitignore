@@ -1,5 +1,50 @@
+# macOS and editor metadata
 .DS_Store
+.idea/
+.vscode/
+.zed/
+.cache/
+*.swp
+*.swo
+*.bak
+*.tmp
+*~
+
+# Local agent configuration
 .claude/
-tmp/
+.codex/
+
+# Dependencies and local environments
 node_modules/
+.venv/
+venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.py[cod]
+
+# Secrets and machine-local configuration
+.env
+.env.*
+!.env.example
+
+# Build and test output
 dist/
+coverage/
+.nyc_output/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.zip
+
+# Generated and temporary artwork
+output/
+temp/
+tmp/
+
+# Saved Chrome Web Store dashboard page
+extension/icons/icon.html
+extension/icons/icon_files/
