@@ -5,10 +5,10 @@
  * mount point and the visible Region-selector control.
  *
  * The header mount selectors are intentionally limited to the current AWS
- * top-level navigation row. The surrounding global navigation also contains
- * a second shortcuts row, while generic `header` selectors can match hidden
- * panels during Console bootstrap. `findFirst` fails closed when the verified
- * top row is not present.
+ * global navigation container that owns both the top-level and shortcuts
+ * rows. Generic `header` selectors can match hidden panels during Console
+ * bootstrap, so `findFirst` fails closed when a verified global navigation
+ * container is not present.
  */
 (function (root) {
   'use strict';
@@ -16,8 +16,9 @@
   // Ordered best-effort candidates for the AWS Console header container that
   // the decorative layer is mounted into. Most specific/stable hooks first.
   var HEADER_MOUNT_SELECTORS = [
-    '#awsc-top-level-nav',
-    '[data-testid="awsc-top-level-nav"]'
+    '#awsc-nav-header nav[aria-label="Global"]',
+    '[data-testid="awsc-nav-header"] nav[aria-label="Global"]',
+    'nav[aria-label="Global"]'
   ];
 
   // Ordered best-effort candidates for the visible Region-selector control

@@ -7,9 +7,11 @@
  *   - Runs ONE bounded, one-time bootstrap `MutationObserver` (with a sane
  *     timeout) to discover the header mount point if it is not present yet.
  *   - Once discovered, switches to a narrow steady-state `MutationObserver`
- *     scoped only to the mount point's *parent* (not document.body), which
- *     catches AWS remounting the header subtree, coalesced onto a
- *     microtask so bursts of mutations only trigger one re-render.
+ *     scoped only to the mount point's *parent* subtree (not document.body).
+ *     It reacts to replacement of the header mount and direct-child changes
+ *     inside the mount, so AWS React remounts cannot permanently remove the
+ *     extension layer or Region badge. Bursts are coalesced onto a microtask
+ *     so they only trigger one re-render.
  *
  * This file contains no fixed-interval or recurring timer of any kind. The
  * one bounded, single-shot deferred callback used to time out the bootstrap
@@ -112,10 +114,22 @@
       if (steadyObserver || typeof rootWindow.MutationObserver !== 'function') {
         return;
       }
-      steadyObserver = new rootWindow.MutationObserver(function () {
-        scheduleCoalescedChange();
+      steadyObserver = new rootWindow.MutationObserver(function (records) {
+        var currentMount = findFirst(HEADER_MOUNT_SELECTORS, rootDocument);
+        if (!currentMount) {
+          scheduleCoalescedChange();
+          return;
+        }
+
+        var currentParent = currentMount.parentNode;
+        for (var i = 0; i < records.length; i += 1) {
+          if (records[i].target === currentMount || records[i].target === currentParent) {
+            scheduleCoalescedChange();
+            return;
+          }
+        }
       });
-      steadyObserver.observe(scopeNode, { childList: true, subtree: false });
+      steadyObserver.observe(scopeNode, { childList: true, subtree: true });
     }
 
     function attemptSteadyStateSetup() {

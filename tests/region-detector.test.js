@@ -41,33 +41,15 @@ function loadConfig() {
   return require(REGION_CONFIG_PATH);
 }
 
-const SUPPORTED_REGION_CODES = [
-  'ap-northeast-2',
-  'ap-northeast-1',
-  'us-east-1',
-  'us-west-2',
-  'eu-west-1',
-  'eu-central-1',
-  'ap-southeast-1',
-  'ap-southeast-2',
-  'ap-south-1',
-  'sa-east-1'
-];
+const SUPPORTED_REGION_CODES = loadConfig().SUPPORTED_REGIONS;
 
 // Real, official AWS Region display names, as they would appear in the
 // Region-selector UI. Used for the visible-selector-fallback scenario.
-const OFFICIAL_REGION_LABELS = {
-  'ap-northeast-2': 'Asia Pacific (Seoul)',
-  'ap-northeast-1': 'Asia Pacific (Tokyo)',
-  'us-east-1': 'US East (N. Virginia)',
-  'us-west-2': 'US West (Oregon)',
-  'eu-west-1': 'Europe (Ireland)',
-  'eu-central-1': 'Europe (Frankfurt)',
-  'ap-southeast-1': 'Asia Pacific (Singapore)',
-  'ap-southeast-2': 'Asia Pacific (Sydney)',
-  'ap-south-1': 'Asia Pacific (Mumbai)',
-  'sa-east-1': 'South America (São Paulo)'
-};
+const OFFICIAL_REGION_LABELS = Object.fromEntries(
+  Object.entries(loadConfig().REGION_MAP)
+    .filter(([code]) => code !== 'aws-global')
+    .map(([code, entry]) => [code, entry.label])
+);
 
 describe('region-detector.js - module contract', () => {
   it('module file exists at extension/src/region-detector.js', () => {
@@ -118,22 +100,22 @@ describe('region-detector.js - URL and query Region parsing (FR-01, signal 1)', 
     });
   }
 
-  it('resolves a Region code that is valid AWS but not in the 10-code allowlist to "unsupported" (e.g. ca-central-1)', () => {
+  it('resolves a Region code outside the commercial allowlist to "unsupported"', () => {
     const result = detectState({
-      href: 'https://console.aws.amazon.com/ec2/home?region=ca-central-1',
-      search: '?region=ca-central-1',
+      href: 'https://console.aws.amazon.com/ec2/home?region=us-gov-west-1',
+      search: '?region=us-gov-west-1',
       regionSelectorText: ''
     });
     assert.equal(result.status, 'unsupported');
-    assert.notEqual(result.regionCode, 'ca-central-1');
+    assert.notEqual(result.regionCode, 'us-gov-west-1');
   });
 
   it('does not guess a nearby supported Region for an unsupported code', () => {
-    // ap-northeast-3 (Osaka) is geographically "nearby" ap-northeast-2/1 but
-    // is not one of the 10 supported codes; must not be coerced to either.
+    // eu-isoe-west-1 is a separate ISO partition code and must not be
+    // coerced to a commercial Europe Region.
     const result = detectState({
-      href: 'https://console.aws.amazon.com/ec2/home?region=ap-northeast-3',
-      search: '?region=ap-northeast-3',
+      href: 'https://console.aws.amazon.com/ec2/home?region=eu-isoe-west-1',
+      search: '?region=eu-isoe-west-1',
       regionSelectorText: ''
     });
     assert.equal(result.status, 'unsupported');
@@ -222,8 +204,8 @@ describe('region-detector.js - ambiguous/unsupported classification', () => {
 
   it('unsupported Region code takes precedence and does not fall back to the selector', () => {
     const result = detectState({
-      href: 'https://console.aws.amazon.com/ec2/home?region=ca-central-1',
-      search: '?region=ca-central-1',
+      href: 'https://console.aws.amazon.com/ec2/home?region=us-gov-west-1',
+      search: '?region=us-gov-west-1',
       regionSelectorText: 'Asia Pacific (Seoul)'
     });
     assert.equal(result.status, 'unsupported');

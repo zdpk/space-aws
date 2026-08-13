@@ -7,8 +7,8 @@
 //   renderState(state, { rootDocument }): void
 //   restoreNativeHeader({ rootDocument }): void
 //
-// Owns a single namespaced element (id="aws-dream-layer") and a single
-// namespaced <style> tag; preloads via `new Image()` before swap; tracks
+// Owns one namespaced background, an optional namespaced Region badge, and a
+// single namespaced <style> tag; preloads via `new Image()` before swap; tracks
 // and reverts only the one inline `position` style property it may add to
 // the mount point.
 //
@@ -29,6 +29,7 @@ const { JSDOM } = require('jsdom');
 
 const HEADER_RENDERER_PATH = path.join(__dirname, '..', 'extension', 'src', 'header-renderer.js');
 const DOM_TARGETS_PATH = path.join(__dirname, '..', 'extension', 'src', 'dom-targets.js');
+const REGION_CONFIG_PATH = path.join(__dirname, '..', 'extension', 'src', 'region-config.js');
 const FIXTURE_PATH = path.join(__dirname, 'fixtures', 'aws-console-header.html');
 
 const NATIVE_TESTIDS = [
@@ -36,6 +37,7 @@ const NATIVE_TESTIDS = [
   'awsc-nav-logo',
   'awsc-nav-services-menu',
   'awsc-nav-search',
+  'awsc-nav-scallop-icon',
   'awsc-nav-region-menu',
   'awsc-nav-support-menu',
   'awsc-nav-username-menu',
@@ -260,9 +262,81 @@ describe('header-renderer.js - non-interactive decoration', () => {
     assert.ok(layer, 'expected #aws-dream-layer after a global-state render');
     assert.equal(layer.getAttribute('aria-hidden'), 'true');
     assert.equal(dom.window.getComputedStyle(layer).pointerEvents, 'none');
-    assert.equal(layer.parentElement.id, 'awsc-top-level-nav');
+    assert.equal(layer.parentElement.tagName, 'NAV');
+    assert.equal(layer.parentElement.getAttribute('aria-label'), 'Global');
     assert.equal(layer.style.zIndex, '-1');
     assert.equal(doc.querySelector('#awsc-nav-shortcuts #aws-dream-layer'), null);
+  });
+
+  it('renders a non-interactive Region badge with the local flag asset for Seoul', async () => {
+    const ControlledImage = installControlledImage(dom.window);
+    headerRenderer.renderState(
+      { status: 'region', regionCode: 'ap-northeast-2' },
+      { rootDocument: doc }
+    );
+    ControlledImage.resolveAll();
+    await flush();
+
+    const badge = doc.getElementById('aws-dream-region-badge');
+    assert.ok(badge, 'expected a Region badge for Seoul');
+    assert.equal(badge.parentElement.tagName, 'NAV');
+    assert.equal(badge.parentElement.getAttribute('aria-label'), 'Global');
+    assert.equal(badge.getAttribute('aria-hidden'), 'true');
+    assert.equal(dom.window.getComputedStyle(badge).pointerEvents, 'none');
+    assert.equal(badge.textContent, 'AP-NORTHEAST-2');
+    assert.equal(badge.querySelector('img').getAttribute('src'), 'assets/flags/kr.svg');
+    assert.equal(badge.style.left, 'auto');
+    assert.equal(badge.style.transform, 'none');
+  });
+
+  it('renders the matching code and country flag badge for every supported Region', async () => {
+    const ControlledImage = installControlledImage(dom.window);
+    const regionConfig = requireFresh(REGION_CONFIG_PATH);
+
+    for (const regionCode of regionConfig.SUPPORTED_REGIONS) {
+      const config = regionConfig.REGION_MAP[regionCode];
+      headerRenderer.renderState(
+        { status: 'region', regionCode },
+        { rootDocument: doc }
+      );
+      ControlledImage.resolveAll();
+      await flush();
+
+      const badge = doc.getElementById('aws-dream-region-badge');
+      assert.ok(badge, `expected a Region badge for ${regionCode}`);
+      assert.equal(badge.dataset.assetKey, regionCode);
+      assert.equal(badge.textContent, config.badgeCode);
+      assert.equal(
+        badge.querySelector('img').getAttribute('src'),
+        config.flagAssetPath,
+        `expected the configured country flag for ${regionCode}`
+      );
+      assert.equal(doc.querySelectorAll('#aws-dream-region-badge').length, 1);
+    }
+  });
+
+  it('positions the Region badge immediately to the left of the visible CloudShell icon', async () => {
+    const mount = doc.querySelector('nav[aria-label="Global"]');
+    const cloudShell = doc.getElementById('awsc-nav-scallop-icon');
+    mount.getBoundingClientRect = () => ({
+      left: 0, right: 1000, top: 0, bottom: 73, width: 1000, height: 73
+    });
+    cloudShell.getBoundingClientRect = () => ({
+      left: 700, right: 748, top: 0, bottom: 48, width: 48, height: 48
+    });
+
+    const ControlledImage = installControlledImage(dom.window);
+    headerRenderer.renderState(
+      { status: 'region', regionCode: 'ap-northeast-2' },
+      { rootDocument: doc }
+    );
+    ControlledImage.resolveAll();
+    await flush();
+
+    const badge = doc.getElementById('aws-dream-region-badge');
+    assert.equal(badge.style.right, '308px');
+    assert.equal(badge.style.top, '13px');
+    assert.equal(badge.style.bottom, 'auto');
   });
 });
 
@@ -295,7 +369,7 @@ describe('header-renderer.js - native header controls are never touched', () => 
     assert.ok(mount, 'fixture header container must match a HEADER_MOUNT_SELECTORS candidate');
 
     const nativeBefore = Array.from(mount.children)
-      .filter((el) => el.id !== 'aws-dream-layer')
+      .filter((el) => el.id !== 'aws-dream-layer' && el.id !== 'aws-dream-region-badge')
       .map((el) => el.outerHTML);
 
     const ControlledImage = installControlledImage(dom.window);
@@ -307,7 +381,7 @@ describe('header-renderer.js - native header controls are never touched', () => 
     await flush();
 
     const nativeAfter = Array.from(mount.children)
-      .filter((el) => el.id !== 'aws-dream-layer')
+      .filter((el) => el.id !== 'aws-dream-layer' && el.id !== 'aws-dream-region-badge')
       .map((el) => el.outerHTML);
 
     assert.deepEqual(nativeAfter, nativeBefore);
@@ -454,7 +528,7 @@ describe('header-renderer.js - preload before swap', () => {
   });
 });
 
-describe('header-renderer.js - single tracked position style property', () => {
+describe('header-renderer.js - tracked mount style properties', () => {
   let dom;
   let doc;
   let headerRenderer;
@@ -528,6 +602,39 @@ describe('header-renderer.js - single tracked position style property', () => {
       'relative',
       'expected restoreNativeHeader to leave a pre-existing position value untouched'
     );
+  });
+
+  it('creates an isolated stacking context so the negative background layer remains visible', async () => {
+    const mount = domTargets.findFirst(domTargets.HEADER_MOUNT_SELECTORS, doc);
+    assert.ok(mount);
+    assert.equal(mount.style.isolation, '');
+
+    const ControlledImage = installControlledImage(dom.window);
+    headerRenderer.renderState({ status: 'region', regionCode: 'ap-northeast-2' }, { rootDocument: doc });
+    ControlledImage.resolveAll();
+    await flush();
+
+    assert.equal(mount.style.isolation, 'isolate');
+    assert.equal(doc.getElementById('aws-dream-layer').style.zIndex, '-1');
+
+    headerRenderer.restoreNativeHeader({ rootDocument: doc });
+    assert.equal(mount.style.isolation, '');
+    assert.equal(mount.hasAttribute('data-aws-dream-original-isolation'), false);
+  });
+
+  it('restores a pre-existing inline isolation value exactly', async () => {
+    const mount = domTargets.findFirst(domTargets.HEADER_MOUNT_SELECTORS, doc);
+    assert.ok(mount);
+    mount.style.isolation = 'auto';
+
+    const ControlledImage = installControlledImage(dom.window);
+    headerRenderer.renderState({ status: 'region', regionCode: 'ap-northeast-2' }, { rootDocument: doc });
+    ControlledImage.resolveAll();
+    await flush();
+
+    assert.equal(mount.style.isolation, 'isolate');
+    headerRenderer.restoreNativeHeader({ rootDocument: doc });
+    assert.equal(mount.style.isolation, 'auto');
   });
 });
 
@@ -604,6 +711,7 @@ describe('header-renderer.js - disabled-state restoration', () => {
     headerRenderer.restoreNativeHeader({ rootDocument: doc });
 
     assert.equal(doc.getElementById('aws-dream-layer'), null);
+    assert.equal(doc.getElementById('aws-dream-region-badge'), null);
     assert.equal(doc.querySelectorAll('style[data-aws-dream], style#aws-dream-style').length <= 1, true);
   });
 

@@ -143,12 +143,92 @@ describe('content scripts - classic browser namespace integration', () => {
       await new Promise((resolve) => dom.window.setTimeout(resolve, 0));
       await new Promise((resolve) => dom.window.setTimeout(resolve, 0));
 
-      const layer = topLevelNav.querySelector('#aws-dream-layer');
-      assert.ok(layer, 'expected the decorative layer inside the AWS top-level navigation row');
+      const layer = globalNav.querySelector(':scope > #aws-dream-layer');
+      assert.ok(layer, 'expected the decorative layer inside the full AWS global header');
       assert.equal(layer.dataset.assetKey, 'ap-northeast-2');
       assert.equal(layer.style.zIndex, '-1');
+      const badge = globalNav.querySelector(':scope > #aws-dream-region-badge');
+      assert.ok(badge, 'expected the Seoul Region badge inside the full AWS global header');
+      assert.equal(badge.textContent, 'AP-NORTHEAST-2');
       assert.equal(shortcutsNav.querySelector('#aws-dream-layer'), null);
       assert.equal(hiddenHeader.querySelector('#aws-dream-layer'), null);
+    } finally {
+      dom.window.close();
+    }
+  });
+
+  it('restores the Region badge after AWS removes a direct header child', async () => {
+    const dom = new JSDOM(
+      '<!doctype html><html><head></head><body>' +
+        '<header data-testid="awsc-nav-header">' +
+          '<nav aria-label="Global">' +
+            '<div id="awsc-top-level-nav">' +
+              '<button data-testid="awsc-nav-region-menu">US East (N. Virginia)</button>' +
+              '<a id="awsc-nav-scallop-icon" title="CloudShell"></a>' +
+            '</div>' +
+            '<div id="awsc-nav-shortcuts">EC2 S3 VPC</div>' +
+          '</nav>' +
+        '</header>' +
+      '</body></html>',
+      {
+        url: 'https://us-east-1.console.aws.amazon.com/vpcconsole/home?region=us-east-1',
+        runScripts: 'outside-only'
+      }
+    );
+
+    const storageListeners = new Set();
+    class AutoLoadingImage {
+      set src(value) {
+        this._src = value;
+        dom.window.queueMicrotask(() => {
+          if (typeof this.onload === 'function') {
+            this.onload(new dom.window.Event('load'));
+          }
+        });
+      }
+      get src() {
+        return this._src;
+      }
+    }
+    dom.window.Image = AutoLoadingImage;
+    dom.window.chrome = {
+      runtime: {
+        getURL: (assetPath) => 'chrome-extension://aws-dream/' + assetPath
+      },
+      storage: {
+        local: {
+          get: async () => ({ enabled: true }),
+          set: async () => {}
+        },
+        onChanged: {
+          addListener: (listener) => storageListeners.add(listener),
+          removeListener: (listener) => storageListeners.delete(listener)
+        }
+      }
+    };
+
+    try {
+      for (const relativePath of MANIFEST.content_scripts[0].js) {
+        dom.window.eval(fs.readFileSync(path.join(EXTENSION_ROOT, relativePath), 'utf8'));
+      }
+
+      await new Promise((resolve) => dom.window.setTimeout(resolve, 0));
+      await new Promise((resolve) => dom.window.setTimeout(resolve, 0));
+
+      const nav = dom.window.document.querySelector('nav[aria-label="Global"]');
+      const initialBadge = nav.querySelector(':scope > #aws-dream-region-badge');
+      assert.ok(initialBadge, 'expected the initial Virginia Region badge');
+      initialBadge.remove();
+
+      await new Promise((resolve) => dom.window.setTimeout(resolve, 0));
+      await new Promise((resolve) => dom.window.setTimeout(resolve, 0));
+
+      const restoredBadge = nav.querySelector(':scope > #aws-dream-region-badge');
+      assert.ok(restoredBadge, 'expected the Region badge to be restored after AWS removed it');
+      assert.equal(restoredBadge.textContent, 'US-EAST-1');
+      assert.equal(restoredBadge.querySelector('img').getAttribute('src'), 'chrome-extension://aws-dream/assets/flags/us.svg');
+      assert.equal(nav.querySelectorAll(':scope > #aws-dream-layer').length, 1);
+      assert.equal(nav.querySelectorAll(':scope > #aws-dream-region-badge').length, 1);
     } finally {
       dom.window.close();
     }

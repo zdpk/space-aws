@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24" role="img" aria-label="Australia">
+  <rect width="36" height="24" rx="1.2" fill="#012169"/>
+  <g>
+    <path fill="#fff" d="M0 0h16v10.8H0z"/>
+    <path fill="#012169" d="M0 1.2 14.2 10.8H16V9.6L1.8 0H0zm16 0L1.8 10.8H0V9.6L14.2 0H16z"/>
+    <path fill="#c8102e" d="M0 0v.75l5.85 4.65L0 10.05v.75h1.1L8 5.95l6.9 4.85H16v-.75L10.15 5.4 16 .75V0h-1.1L8 4.85 1.1 0z"/>
+    <path fill="#fff" d="M6.5 0h3v10.8h-3zM0 3.9h16v3H0z"/>
+    <path fill="#c8102e" d="M7.1 0h1.8v10.8H7.1zM0 4.5h16v1.8H0z"/>
+  </g>
+  <g fill="#fff">
+    <circle cx="10" cy="17" r="1.45"/><circle cx="27" cy="5" r="1"/><circle cx="31" cy="10" r="1"/><circle cx="25" cy="13" r="1"/><circle cx="30" cy="19" r="1"/><circle cx="22" cy="8" r=".7"/>
+  </g>
+</svg>

@@ -7,7 +7,7 @@
  *
  * Implements the deterministic signal precedence from
  * openspec/changes/aws-dream-mvp/specs/region-detection/spec.md:
- *   1. Explicit Region in the URL/query string (fixed 10-code allowlist;
+ *   1. Explicit Region in the URL/query string (fixed commercial allowlist;
  *      a well-formed-but-unsupported code resolves to `unsupported`, never
  *      a guessed nearby Region).
  *   2. Explicit global-service marker allowlist.
@@ -27,10 +27,11 @@
   var GLOBAL_REGION_CODE = deps.GLOBAL_REGION_CODE;
   var GLOBAL_SERVICE_MARKERS = deps.GLOBAL_SERVICE_MARKERS;
 
-  // Shape of a generic AWS Region code, e.g. `us-east-1`, `ca-central-1`,
-  // `ap-northeast-2`. Used to recognize "this looks like an AWS Region code"
-  // independent of whether it is one of the 10 codes AWS Dream supports.
-  var AWS_REGION_CODE_PATTERN = /^[a-z]{2}-[a-z]+-\d{1,2}$/i;
+  // Shape of a generic AWS Region code, including separate partitions such
+  // as `us-gov-west-1`, `eu-isoe-west-1`, and `eusc-de-east-1`. Recognizing
+  // them here lets the fixed commercial allowlist fail closed as unsupported
+  // instead of accidentally falling through to a stale selector value.
+  var AWS_REGION_CODE_PATTERN = /^[a-z]{2,5}(?:-[a-z0-9]+){1,3}-\d{1,2}$/i;
 
   /**
    * Attempts to read a `region=` style value from a URLSearchParams-like

@@ -349,7 +349,7 @@ describe('system-level (navigation-observer + region-detector + header-renderer)
     disconnect();
   });
 
-  it('removes the layer on navigation to an unsupported Region, then shows exactly one again after returning to a supported Region', async () => {
+  it('removes the layer on navigation to a separate-partition Region, then shows exactly one again after returning to a commercial Region', async () => {
     const disconnect = observeNavigation(rerender);
 
     global.history.pushState({}, '', '/console/home?region=ap-northeast-2');
@@ -361,7 +361,7 @@ describe('system-level (navigation-observer + region-detector + header-renderer)
       'precondition: exactly one layer while in a supported Region'
     );
 
-    global.history.pushState({}, '', '/console/home?region=ca-central-1');
+    global.history.pushState({}, '', '/console/home?region=us-gov-west-1');
     await flush();
     assert.equal(
       global.document.querySelectorAll('#aws-dream-layer').length,

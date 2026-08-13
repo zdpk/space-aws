@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24" role="img" aria-label="Singapore">
+  <rect width="36" height="24" rx="1.2" fill="#fff"/>
+  <path fill="#ef3340" d="M0 0h36v12H0z"/>
+  <circle cx="8" cy="6" r="4.2" fill="#fff"/>
+  <circle cx="9.7" cy="5.2" r="3.6" fill="#ef3340"/>
+  <g fill="#fff">
+    <circle cx="13.2" cy="2.5" r=".55"/><circle cx="15.1" cy="4.2" r=".55"/><circle cx="14.4" cy="6.6" r=".55"/><circle cx="12" cy="6.6" r=".55"/><circle cx="11.3" cy="4.2" r=".55"/>
+  </g>
+</svg>

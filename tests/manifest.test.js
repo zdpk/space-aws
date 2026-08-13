@@ -134,13 +134,15 @@ describe('manifest.json - web_accessible_resources scoped to the AWS Console hos
     }
   });
 
-  it('exposes only assets/regions/*.webp (or an equivalently scoped path), not the whole package', () => {
+  it('exposes only scoped Region artwork and flag assets, not the whole package', () => {
     const manifest2 = fs.existsSync(MANIFEST_PATH) ? readManifest() : {};
     for (const entry of manifest2.web_accessible_resources || []) {
       for (const resource of entry.resources || []) {
+        const isRegionArtwork = resource.startsWith('assets/regions/');
+        const isFlagAsset = resource.startsWith('assets/flags/');
         assert.ok(
-          resource.startsWith('assets/regions/'),
-          `web_accessible_resources should be scoped to assets/regions/, got: ${resource}`
+          isRegionArtwork || isFlagAsset,
+          `web_accessible_resources should be scoped to assets/regions/ or assets/flags/, got: ${resource}`
         );
       }
     }
