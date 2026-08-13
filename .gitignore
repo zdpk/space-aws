@@ -54,3 +54,10 @@ store-assets/icons/aws-dream-store-icon-*.png
 store-assets/source/icon-*-background.png
 store-assets/source/icon-composite.html
 store-assets/source/powered-by-aws-white.png
+
+# Superseded Chrome Web Store drafts kept only for local reference
+store-assets/screenshots/01-seoul-region.png
+store-assets/screenshots/03-global-space-and-toggle.png
+store-assets/promotional/space-aws-registration-master.png
+store-assets/promotional/space-aws-registration-1280x800.png
+store-assets/promotional/space-aws-registration-440x280.png

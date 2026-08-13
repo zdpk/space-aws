@@ -2,32 +2,37 @@
 
 ## Final assets
 
-- `icons/aws-dream-store-icon-1024.png` — high-resolution global-space store icon
-- `icons/aws-dream-store-icon-128.png` — Chrome Web Store and manifest icon
-- `icons/aws-dream-store-icon-48.png` — extension management icon
-- `icons/aws-dream-store-icon-16.png` — size-adapted global-space toolbar icon
-- `screenshots/01-seoul-region.png` — supported Region header state
+- `icons/space-aws-store-icon-1024.png` — high-resolution original planet-and-orbit store icon
+- `icons/space-aws-store-icon-128.png` — Chrome Web Store and manifest icon
+- `icons/space-aws-store-icon-48.png` — extension management icon
+- `icons/space-aws-store-icon-16.png` — size-adapted toolbar icon
+- `screenshots/01-virginia-region.png` — US East (N. Virginia) Region header state
 - `screenshots/02-tokyo-region.png` — Region switching state
-- `screenshots/03-global-space-and-toggle.png` — global service and popup state
+- `screenshots/03-london-region.png` — Europe (London) Region header state
+- `screenshots/04-seoul-region.png` — Asia Pacific (Seoul) Region header state
+- `screenshots/05-frankfurt-region.png` — Europe (Frankfurt) Region header state
+- `promotional/space-aws-small-promo-440x280.png` — final 440×280 small promo tile
+- `promotional/space-aws-marquee-promo-1400x560.png` — final 1400×560 marquee promo tile
 
 All store screenshots are 1280×800 pixels.
 
-The screenshots are privacy-safe staged previews rendered from a local AWS Console mock. They contain no account identifiers or resource data. Replace them with equivalent live captures after the signed-in Console QA pass if the current production Console layout differs materially.
+The screenshots are privacy-checked AWS Console captures. They contain no visible account identifiers, credentials, or resource data.
 
 ## Sources
 
-- The square global-space background was adapted from `extension/assets/regions/aws-global.webp` with OpenAI image generation at the highest available quality.
+- The final icon source is `source/space-aws-icon-source.png`, created as an original text-free planet-and-orbit design.
+- The original registration background is preserved as `source/space-aws-registration-background-original.png`.
+- The final promo tiles use `source/space-aws-promo-background-master.png` and composite `source/aws-logo-smile-white-transparent.png` without regenerating the official logo.
 - The header artwork is bundled in `extension/assets/regions/`.
-- The final icon uses `source/aws-logo-smile-white-transparent.png`, derived from the AWS-only source image hosted on the official AWS static asset domain.
-- `source/powered-by-aws-white.png`, `source/icon-cloudy-moon-background.png`, `source/icon-yellow-moon-background.png`, and `source/icon-night-sky-background.png` preserve previous icon concepts only.
+- Superseded AWS Dream artwork and intermediate registration renders are excluded from version control and retained only as local references.
 
-Amazon Web Services, AWS, and the Powered by AWS logo are trademarks of Amazon.com, Inc. or its affiliates. AWS Dream is an independent extension and is not affiliated with, endorsed by, or sponsored by Amazon Web Services.
+Amazon Web Services and AWS are trademarks of Amazon.com, Inc. or its affiliates. SPACE AWS is an independent extension and is not affiliated with, endorsed by, or sponsored by Amazon Web Services.
 
-The AWS Smile Logo is an AWS trademark. Obtain written permission or another applicable AWS license before public release, keep the independent-extension disclaimer, and do not imply AWS sponsorship, endorsement, or affiliation.
+The release icon contains no AWS logo. The optional registration artwork does contain the AWS Smile Logo at the user's direction. Confirm the applicable AWS license or written permission before public release and do not imply AWS sponsorship, endorsement, or affiliation.
 
 ## Rebuild
 
-Open `source/icon-composite.html` at a 1024×1024 viewport and capture it to rebuild the global-space icon source.
+Run `python3 extension/icons/generate-icons.py` to rebuild the size-adapted extension icons from the approved source.
 
 Open `source/store-screenshot.html` at a 1280×800 viewport with one of these query strings:
 
