@@ -8,7 +8,7 @@ SPACE AWS is a Chrome extension that adds Region-specific atmospheric artwork to
 
 To identify the active supported AWS Region, SPACE AWS locally accesses and processes:
 
-- **Web browsing activity:** the current AWS Management Console page URL.
+- **Web history (web browsing activity):** the current AWS Management Console page URL.
 - **Website content:** the visible AWS Region selector text.
 
 This information is used only in memory to select the matching artwork bundled with the extension. It is not retained, transmitted, or used to build a browsing history or user profile.
