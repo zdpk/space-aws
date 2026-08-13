@@ -105,10 +105,11 @@ Use the following data-use disclosures in the Chrome Web Store dashboard:
 - Website content: the visible AWS Region selector text is processed locally to identify the active supported Region.
 - Web history: the current AWS Console page URL is processed locally to identify the active supported Region.
 - No other data types are processed.
-- No data is retained, transmitted, sold, shared, or used for advertising or analytics.
+- The URL and Region selector text are not retained or transmitted.
+- Only the enabled or disabled preference is stored locally; no information is sold, shared, or used for advertising or analytics.
 - No remote code is used.
 
-Use the public URL of [`PRIVACY.md`](PRIVACY.md) for the Privacy Policy field after publishing it on an accessible website.
+Use `https://github.com/zdpk/space-aws/blob/main/PRIVACY.md` for the Privacy Policy field.
 
 ### Store visual assets
 
