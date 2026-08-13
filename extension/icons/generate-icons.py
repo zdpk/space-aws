@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate SPACE AWS extension icons from the approved store source."""
+"""Generate SPACE AWS extension icons from the public 1024px store icon."""
 
 from pathlib import Path
 
@@ -7,7 +7,7 @@ from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
 
 
 OUTPUT_DIR = Path(__file__).resolve().parent
-SOURCE_PATH = OUTPUT_DIR.parents[1] / "store-assets" / "source" / "space-aws-icon-source.png"
+SOURCE_PATH = OUTPUT_DIR.parents[1] / "store-assets" / "icons" / "space-aws-store-icon-1024.png"
 
 
 def render_icon(source: Image.Image, size: int) -> Image.Image:

@@ -1,18 +1,12 @@
 'use strict';
 
-// Tests for extension/src/region-config.js against the frozen contract in
-// openspec/changes/aws-dream-mvp/design.md §2 and the requirements in
-// openspec/changes/aws-dream-mvp/specs/region-assets/spec.md.
+// Tests for the public Region configuration contract.
 //
 //   SUPPORTED_REGIONS: string[]  (all 34 commercial codes)
 //   REGION_MAP: Record<code, {label, assetPath, backgroundColor, objectPosition}>
 //               incl. `aws-global`
 //   GLOBAL_SERVICE_MARKERS: Array<{pattern: RegExp, label: string}>
 //
-// This file is owned by the `core` agent. If it does not exist yet, or its
-// exports diverge from the contract, these tests will fail/error - that is
-// expected until `core` lands extension/src/region-config.js.
-
 const assert = require('node:assert/strict');
 const { describe, it } = require('node:test');
 const fs = require('node:fs');

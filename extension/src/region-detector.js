@@ -5,8 +5,7 @@
  * plain value passed in by the caller (content.js), which is what lets this
  * module be unit-tested with plain strings.
  *
- * Implements the deterministic signal precedence from
- * openspec/changes/aws-dream-mvp/specs/region-detection/spec.md:
+ * Implements this deterministic signal precedence:
  *   1. Explicit Region in the URL/query string (fixed commercial allowlist;
  *      a well-formed-but-unsupported code resolves to `unsupported`, never
  *      a guessed nearby Region).

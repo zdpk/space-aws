@@ -1,8 +1,6 @@
 'use strict';
 
-// Tests for extension/src/header-renderer.js against the frozen contract in
-// openspec/changes/aws-dream-mvp/design.md §2/§3 and every requirement/
-// scenario in openspec/changes/aws-dream-mvp/specs/header-theming/spec.md.
+// Tests for the decorative header renderer contract.
 //
 //   renderState(state, { rootDocument }): void
 //   restoreNativeHeader({ rootDocument }): void
@@ -12,10 +10,7 @@
 // and reverts only the one inline `position` style property it may add to
 // the mount point.
 //
-// This file is owned by the `core` agent (header-renderer.js, dom-targets.js
-// are both core files). If they do not exist yet, or diverge from the
-// frozen contract, these tests will fail/error - expected until `core`
-// lands them. jsdom does not implement real <img>/Image network loading
+// jsdom does not implement real <img>/Image network loading
 // (see jsdom's documented unimplemented parts of the platform), so asset
 // preload/failure is simulated deterministically via a controllable fake
 // `Image` constructor rather than relying on jsdom to actually fetch the

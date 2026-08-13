@@ -8,7 +8,7 @@
     the DOM (e.g. very early in a client-side render, or a page whose
     markup diverges from every known candidate selector). Used to test
     the fail-closed "wait for a bounded DOM signal, then safely do
-    nothing" path from PRD.md §11 and design.md §3: no header mount
+    nothing" path: no header mount
     candidate exists anywhere in this document, so region-detector /
     header-renderer / navigation-observer must not throw, must not
     inject anything, and must not loop indefinitely waiting for a

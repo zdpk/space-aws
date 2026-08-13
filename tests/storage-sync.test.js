@@ -1,10 +1,7 @@
 'use strict';
 
-// Tests for extension/src/storage.js against the frozen contract in
-// openspec/changes/aws-dream-mvp/design.md §2 and every requirement/scenario
-// in openspec/changes/aws-dream-mvp/specs/extension-popup/spec.md that
-// concerns storage/persistence/sync (as opposed to the popup DOM itself,
-// which is out of scope for a Node-only test).
+// Tests for the extension storage/persistence/sync contract. Popup DOM
+// behavior is out of scope for this Node-only test.
 //
 //   DEFAULT_ENABLED = true
 //   async getEnabled(): Promise<boolean>
@@ -14,10 +11,7 @@
 // There is no real `chrome` global in Node, so this file stubs a minimal
 // in-memory fake of chrome.storage.local.get/set and
 // chrome.storage.onChanged.addListener/removeListener before requiring/
-// calling into storage.js, per the qa task instructions. This file is owned
-// by the `popup` agent; if it does not exist yet, or diverges from the
-// contract, these tests will fail/error - expected until `popup` lands
-// extension/src/storage.js.
+// calling into storage.js.
 
 const assert = require('node:assert/strict');
 const { describe, it, beforeEach, afterEach } = require('node:test');

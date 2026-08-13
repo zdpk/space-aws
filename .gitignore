@@ -14,6 +14,15 @@
 .claude/
 .codex/
 
+# Private planning and production materials
+PRD.md
+openspec/
+docs/claude/
+docs/plans/
+docs/research/
+prompts/
+store-assets/source/
+
 # Dependencies and local environments
 node_modules/
 .venv/
@@ -51,9 +60,6 @@ extension/icons/icon_files/
 
 # Obsolete AWS Dream store artwork kept only for local reference
 store-assets/icons/aws-dream-store-icon-*.png
-store-assets/source/icon-*-background.png
-store-assets/source/icon-composite.html
-store-assets/source/powered-by-aws-white.png
 
 # Superseded Chrome Web Store drafts kept only for local reference
 store-assets/screenshots/01-seoul-region.png

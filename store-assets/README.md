@@ -18,13 +18,11 @@ All store screenshots are 1280×800 pixels.
 
 The screenshots are privacy-checked AWS Console captures. They contain no visible account identifiers, credentials, or resource data.
 
-## Sources
+## Production notes
 
-- The final icon source is `source/space-aws-icon-source.png`, created as an original text-free planet-and-orbit design.
-- The original registration background is preserved as `source/space-aws-registration-background-original.png`.
-- The final promo tiles use `source/space-aws-promo-background-master.png` and composite `source/aws-logo-smile-white-transparent.png` without regenerating the official logo.
+- The public 1024px icon is an original text-free planet-and-orbit design.
 - The header artwork is bundled in `extension/assets/regions/`.
-- Superseded AWS Dream artwork and intermediate registration renders are excluded from version control and retained only as local references.
+- Editable source artwork, superseded drafts, and intermediate renders are maintained separately from the public repository.
 
 Amazon Web Services and AWS are trademarks of Amazon.com, Inc. or its affiliates. SPACE AWS is an independent extension and is not affiliated with, endorsed by, or sponsored by Amazon Web Services.
 
@@ -32,10 +30,4 @@ The release icon contains no AWS logo. The optional registration artwork does co
 
 ## Rebuild
 
-Run `python3 extension/icons/generate-icons.py` to rebuild the size-adapted extension icons from the approved source.
-
-Open `source/store-screenshot.html` at a 1280×800 viewport with one of these query strings:
-
-- `?scene=seoul`
-- `?scene=tokyo`
-- `?scene=global`
+Run `python3 extension/icons/generate-icons.py` to rebuild the size-adapted extension icons from `icons/space-aws-store-icon-1024.png`.

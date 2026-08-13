@@ -1,9 +1,7 @@
 // AWS Dream - storage.js
 //
-// Frozen shared wrapper around chrome.storage.local for the single
-// "enabled" boolean. Owned by the `popup` agent (see
-// openspec/changes/aws-dream-mvp/design.md, Decisions #1 and #2) but
-// consumed read-only by `core`'s content.js and by qa's Node tests.
+// Shared wrapper around chrome.storage.local for the single "enabled"
+// boolean. It is consumed by the popup, the content script, and tests.
 //
 // Loads unmodified either as:
 //   - a classic (non-module) content script / popup <script> tag, where

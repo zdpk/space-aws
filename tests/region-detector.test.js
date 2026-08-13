@@ -1,17 +1,11 @@
 'use strict';
 
-// Tests for extension/src/region-detector.js against the frozen contract in
-// openspec/changes/aws-dream-mvp/design.md §2 and every requirement/scenario
-// in openspec/changes/aws-dream-mvp/specs/region-detection/spec.md.
+// Tests for the deterministic Region-detection contract.
 //
 //   detectState({ href, search, regionSelectorText }):
 //     { status: 'region' | 'global' | 'unsupported' | 'ambiguous', regionCode?: string }
 //
-// Pure function, no DOM access - all inputs are plain strings, per design.md
-// ("so `qa` can unit test it with plain strings"). This file is owned by the
-// `core` agent; if it does not exist yet, or diverges from the contract,
-// these tests will fail/error - expected until `core` lands
-// extension/src/region-detector.js.
+// Pure function, no DOM access: all inputs are plain strings.
 
 const assert = require('node:assert/strict');
 const { describe, it } = require('node:test');

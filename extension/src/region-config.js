@@ -10,12 +10,10 @@
  *
  * Every configured path has a distinct approved Cosmic Regions WebP asset.
  * All two-row assets use a 4096 x 200 production strip.
- * Source prompts and geographic research remain under prompts/ and docs/;
- * runtime copies are synchronized with scripts/sync-region-assets.sh.
+ * Runtime copies are synchronized with scripts/sync-region-assets.sh.
  *
- * `backgroundColor` / `objectPosition` are visual fallback tokens derived
- * from the palette language in PRD.md §5 (e.g. "navy, indigo, coral
- * twilight" for Seoul). Final responsive safe zones still require live AWS
+ * `backgroundColor` / `objectPosition` are visual fallback tokens for asset
+ * loading and responsive placement. Final safe zones still require live AWS
  * Console validation before store release.
  */
 (function (root) {
@@ -261,11 +259,9 @@
     badgeCode: 'AWS-GLOBAL'
   };
 
-  // Small, maintained, best-effort allowlist of global-service URL markers
-  // (PRD.md §9, spec: region-detection "Explicit global-service detection").
+  // Small, maintained, best-effort allowlist of global-service URL markers.
   // These are reasonable guesses at AWS Console path fragments for services
-  // that have no Region concept; unverified against the live Console (see
-  // PRD.md §16 deferred decisions). Matching is intentionally narrow (path
+  // that have no Region concept. Matching is intentionally narrow (path
   // fragments), never a blanket host-only rule, so a regional service page
   // that happens to omit an explicit region query param is not
   // misclassified as global.

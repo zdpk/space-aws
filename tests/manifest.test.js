@@ -1,11 +1,7 @@
 'use strict';
 
-// Tests for extension/manifest.json against openspec/changes/aws-dream-mvp/
-// design.md §5 ("Permissions") and specs/*/spec.md privacy/permission
-// requirements (PRD.md §9/§12). This file is owned by the `core` agent; if
-// manifest.json does not exist yet, or diverges from the frozen contract,
-// these tests will fail/error - expected until `core` lands
-// extension/manifest.json.
+// Tests for extension/manifest.json permissions, host scoping, and referenced
+// package files.
 
 const assert = require('node:assert/strict');
 const { describe, it } = require('node:test');
@@ -66,7 +62,7 @@ describe('manifest.json - Manifest V3 basics', () => {
   });
 });
 
-describe('manifest.json - minimal permissions (design.md §5, PRD.md §9/§12)', () => {
+describe('manifest.json - minimal permissions', () => {
   const manifest = fs.existsSync(MANIFEST_PATH) ? readManifest() : {};
 
   it('permissions is exactly ["storage"]', () => {

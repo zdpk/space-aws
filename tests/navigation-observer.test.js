@@ -1,23 +1,17 @@
 'use strict';
 
-// Tests for extension/src/navigation-observer.js against the frozen contract
-// in openspec/changes/aws-dream-mvp/design.md §2 and every requirement/
-// scenario in openspec/changes/aws-dream-mvp/specs/navigation-tracking/spec.md.
+// Tests for the event-driven navigation observer contract.
 //
 //   observeNavigation(onChange: () => void): () => void  (disconnect fn)
 //
 // The contract takes no options object (unlike header-renderer.js /
-// region-detector.js), so - per design.md - it is expected to operate on
+// region-detector.js), so it operates on
 // the ambient global `window`/`document`/`history`, as it will in a real
 // content script. To unit test it in Node, this file temporarily installs
 // a jsdom window's globals (window/document/history/location/
 // MutationObserver/etc.) onto the Node `global` object before each test and
 // restores the originals afterward.
 //
-// This file is owned by the `core` agent; if navigation-observer.js does
-// not exist yet, or diverges from the contract, these tests will fail/error
-// - expected until `core` lands it.
-
 const assert = require('node:assert/strict');
 const { describe, it, beforeEach, afterEach } = require('node:test');
 const fs = require('node:fs');
